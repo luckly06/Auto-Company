@@ -45,8 +45,12 @@ PID_FILE="$PROJECT_DIR/.auto-loop.pid"
 STATE_FILE="$PROJECT_DIR/.auto-loop-state"
 
 # Loop settings (all overridable via env vars)
+ENGINE="${ENGINE:-claude}"
+ENGINE="$(echo "$ENGINE" | tr '[:upper:]' '[:lower:]')"
 MODEL="${MODEL:-}"
 MODEL_LABEL="${MODEL:-config-default}"
+CLAUDE_BIN="${CLAUDE_BIN:-}"
+CLAUDE_PERMISSION_MODE="${CLAUDE_PERMISSION_MODE:-bypassPermissions}"
 CODEX_BIN="${CODEX_BIN:-}"
 CODEX_SANDBOX_MODE="${CODEX_SANDBOX_MODE:-danger-full-access}"
 LOOP_INTERVAL="${LOOP_INTERVAL:-30}"
