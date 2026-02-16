@@ -117,7 +117,7 @@ ERROR_COUNT=$error_count
 LAST_RUN=$(date '+%Y-%m-%d %H:%M:%S')
 STATUS=$1
 MODEL=$MODEL_LABEL
-ENGINE=codex
+ENGINE=$ENGINE
 EOF
 }
 
