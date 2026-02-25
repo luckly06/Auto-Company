@@ -31,6 +31,7 @@ npm install -g @openai/codex
 
 ```bash
 make --version
+claude --version
 codex --version
 jq --version
 systemctl --user --version
