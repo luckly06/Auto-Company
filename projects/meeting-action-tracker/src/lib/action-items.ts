@@ -28,6 +28,7 @@ const PRIORITIES: ActionPriority[] = ['high', 'medium', 'low'];
 const STATUSES: ActionStatus[] = ['todo', 'in_progress', 'blocked', 'done'];
 const ACTION_HINT = /(行动项|跟进|负责|需要|请|todo|follow up|next step|send|update|prepare|confirm|review|share|sync|deliver|finalize|安排|提交|同步)/i;
 const QUESTION_HINT = /(\?|待确认|open question|question|unknown|待定|to decide)/i;
+const IMPERATIVE_ACTION_HINT = /^(please|follow up|send|update|prepare|confirm|review|share|sync|deliver|finalize|请|安排|提交|同步)\b/i;
 
 function cleanText(value: unknown, fallback = ''): string {
   if (typeof value !== 'string') {
@@ -178,12 +179,12 @@ function normalizeStringList(value: unknown): string[] {
 }
 
 function inferOwner(segment: string): string {
-  const explicitOwner = segment.match(/(?:负责人|owner)[:：\s]+([A-Za-z\u4e00-\u9fa5][A-Za-z\u4e00-\u9fa5\s-]{0,24})/i);
+  const explicitOwner = segment.match(/(?:负责人|owner)[:：]\s*([A-Za-z\u4e00-\u9fa5][A-Za-z\u4e00-\u9fa5\s-]{0,24})/i);
   if (explicitOwner?.[1]) {
     return explicitOwner[1].trim();
   }
 
-  const chineseOwner = segment.match(/([\u4e00-\u9fa5]{2,4})(?:负责|跟进|整理|同步|发送|确认|提交|安排)/);
+  const chineseOwner = segment.match(/^([\u4e00-\u9fa5]{2,4}?)(?=负责|跟进|整理|同步|发送|确认|提交|安排|需要|补充|检查|验证)/);
   if (chineseOwner?.[1]) {
     return chineseOwner[1];
   }
@@ -228,11 +229,17 @@ function inferPriority(segment: string): ActionPriority {
 }
 
 function isActionCandidate(segment: string): boolean {
-  if (ACTION_HINT.test(segment)) {
+  const hasOwner = inferOwner(segment) !== 'Unassigned';
+
+  if (hasOwner && ACTION_HINT.test(segment)) {
     return true;
   }
 
-  return /(负责|需要|will|needs to|请|跟进)/i.test(segment) && segment.length >= 12;
+  if (hasOwner && /(负责|需要|will|needs to|请|跟进| to )/i.test(segment)) {
+    return segment.length >= 12;
+  }
+
+  return IMPERATIVE_ACTION_HINT.test(segment) && segment.length >= 12;
 }
 
 function uniqueStrings(values: string[]): string[] {

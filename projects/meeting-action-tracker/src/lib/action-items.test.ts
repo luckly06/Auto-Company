@@ -1,4 +1,4 @@
-import { normalizeActionItems, parseExtractionPayload } from '@/lib/action-items';
+import { buildFallbackExtraction, normalizeActionItems, parseExtractionPayload } from '@/lib/action-items';
 
 describe('normalizeActionItems', () => {
   it('trims values and applies safe fallbacks', () => {
@@ -78,5 +78,18 @@ describe('parseExtractionPayload', () => {
         },
       ],
     });
+  });
+});
+
+describe('buildFallbackExtraction', () => {
+  it('ignores heading lines and keeps Chinese owners clean', () => {
+    const result = buildFallbackExtraction(`Customer follow-up review — 2026-03-07
+
+1. Ravi to send the revised onboarding email draft by Tuesday.
+2. 王敏负责确认 pricing section 的 FAQ 是否需要单独导出成 follow-up block，本周内回复。
+3. 陈晨需要补充一条关于 owner 缺失时默认值的说明，下周一前完成。`);
+
+    expect(result.actionItems).toHaveLength(3);
+    expect(result.actionItems.map((item) => item.owner)).toEqual(['Ravi', '王敏', '陈晨']);
   });
 });

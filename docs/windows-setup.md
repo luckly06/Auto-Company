@@ -138,7 +138,27 @@ wsl -d Ubuntu bash -lc 'codex --version; command -v codex'
 
 与手动命令的核心行为一致，差异只在入口方式。
 
-## 7. 常见问题
+## 7. `localhost:3000` / WSL Web 服务访问守则
+
+如果 Windows 无法访问运行在 WSL 内的 Web 服务，优先使用以下资料，不要直接猜配置：
+
+- 项目守则：`docs/devops/2026-03-08-wsl-next-localhost-guardrails.md`
+- 可复用 skill：`/home/dd/.agents/skills/devops/wsl-next-localhost-guardrails/SKILL.md`
+
+这套守则特别适用于：
+
+- Windows 浏览器打不开 `http://localhost:3000`
+- WSL 内 `curl localhost:3000` 正常，但 Windows 不通
+- 怀疑 `portproxy`、IPv4/IPv6 监听、`localhostForwarding`、`hostAddressLoopback`、`wsl-vpnkit`
+
+固定要求：
+
+1. 先查 `netsh interface portproxy show all`
+2. 再分开看 WSL 的 IPv4 / IPv6 监听
+3. 再用 Python 简单 HTTP 服务做控制组
+4. 最后才决定是否改 Windows / WSL 配置
+
+## 8. 常见问题
 
 ### `bad interpreter: /bin/bash^M`
 
