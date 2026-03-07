@@ -145,6 +145,11 @@ memories/consensus.md.bak
 # Projects directory (show folder on GitHub, hide contents)
 projects/*
 !projects/.gitkeep
+!projects/meeting-action-tracker/
+!projects/meeting-action-tracker/**
+projects/meeting-action-tracker/node_modules/
+projects/meeting-action-tracker/.next/
+projects/meeting-action-tracker/tsconfig.tsbuildinfo
 
 # Local/private outputs (do not publish)
 AGENTS.md
