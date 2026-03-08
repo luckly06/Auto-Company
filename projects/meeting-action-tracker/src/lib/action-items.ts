@@ -26,9 +26,10 @@ type RawActionItem = Record<string, unknown>;
 
 const PRIORITIES: ActionPriority[] = ['high', 'medium', 'low'];
 const STATUSES: ActionStatus[] = ['todo', 'in_progress', 'blocked', 'done'];
-const ACTION_HINT = /(行动项|跟进|负责|需要|请|todo|follow up|next step|send|update|prepare|confirm|review|share|sync|deliver|finalize|安排|提交|同步)/i;
-const QUESTION_HINT = /(\?|待确认|open question|question|unknown|待定|to decide)/i;
-const IMPERATIVE_ACTION_HINT = /^(please|follow up|send|update|prepare|confirm|review|share|sync|deliver|finalize|请|安排|提交|同步)\b/i;
+const ACTION_HINT = /(行动项|跟进|负责|需要|请|todo|follow up|next step|send|update|prepare|confirm|review|share|sync|deliver|finalize|安排|提交|同步|完成|处理|整理|确认|发送|检查|验证)/i;
+const QUESTION_HINT = /(\?|待确认|open question|question|unknown|待定|to decide|需要讨论|需要确认)/i;
+const IMPERATIVE_ACTION_HINT = /^(please|follow up|send|update|prepare|confirm|review|share|sync|deliver|finalize|请|安排|提交|同步|完成|处理|整理|确认|发送|检查|验证)\b/i;
+const NEGATIVE_HINT = /^(not|no|don't|won't|不会|不需要|不用|暂不|暂时不)/i;
 
 function cleanText(value: unknown, fallback = ''): string {
   if (typeof value !== 'string') {
@@ -229,6 +230,10 @@ function inferPriority(segment: string): ActionPriority {
 }
 
 function isActionCandidate(segment: string): boolean {
+  if (NEGATIVE_HINT.test(segment)) {
+    return false;
+  }
+
   const hasOwner = inferOwner(segment) !== 'Unassigned';
 
   if (hasOwner && ACTION_HINT.test(segment)) {

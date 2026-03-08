@@ -739,5 +739,5 @@ This is Cycle #$loop_count. Act decisively."
 
     save_state "idle"
     log_cycle "$loop_count" "WAIT" "Sleeping ${LOOP_INTERVAL}s before next cycle..."
-    sleep "$LOOP_INTERVAL"
+    # sleep "$LOOP_INTERVAL"
 done
