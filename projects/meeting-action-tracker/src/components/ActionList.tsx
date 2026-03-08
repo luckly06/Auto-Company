@@ -56,7 +56,7 @@ export function ActionList({ actionItems, onAddItem, onRemoveItem, onUpdateItem,
         {actionItems.map((actionItem) => (
           <article className="rounded-2xl border border-slate-200 p-5" key={actionItem.id}>
             {onUpdateItem ? (
-              <div className="grid gap-3 md:grid-cols-2">
+              <div className="grid gap-3 md:grid-cols-3">
                 <Field label="Task title">
                   <input
                     className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 focus:border-cyan-400 focus:bg-white focus:outline-none"
